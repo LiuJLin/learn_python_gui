@@ -2,9 +2,9 @@
 #encoding = utf-8
 import sys
 import PyQt5
-from PyQt5 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui,QtWidgets
 
-class MyWidget(QtGui.QWidget):
+class MyWidget(QtWidgets):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__(self, parent)
         self.setFixedSize(200, 120)
