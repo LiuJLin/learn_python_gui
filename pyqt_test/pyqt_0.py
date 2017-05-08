@@ -5,11 +5,13 @@ from PyQt5.QtGui import QIcon
 class Example(QWidget):
     def __init__(self):
         super().__init__()
-
+        #用initUI创建一个gui
         self.initUI()
     def initUI(self):
-        self.setGeometry(300,300,300,220)
-        self.setWindowTitle("Icon")
+        #窗口位置和大小
+        self.setGeometry(300,300,900,520)
+        self.setWindowTitle("Adventure")
+        #添加图标
         self.setWindowIcon(QIcon("2.jpg"))
         self.show()
 
