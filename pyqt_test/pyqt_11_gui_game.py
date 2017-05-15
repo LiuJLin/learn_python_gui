@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import (QApplication, QCheckBox, QComboBox, QDateTimeEdit,
 from PyQt5.QtGui import QFont, QIcon, QColor, QFontMetrics, QPainter, QPalette
 import pygame, sys, time, random
 from pygame.locals import *
+
 class Wiggly_Widget(QWidget):
     def __init__(self, parent=None):
         super(Wiggly_Widget, self).__init__(parent)
@@ -168,6 +169,7 @@ class WidgetGift(QDialog):
         layout.setRowStretch(5, 1)
         self.bottomGroupBox.setLayout(layout)
 
+
     def check_password(self):
         password = "526"
         enteredPassword = self.lineEditPassword.text()
@@ -176,11 +178,175 @@ class WidgetGift(QDialog):
             self.lb1.setText('Wonderful!')
             self.lb2.setText('Happy ')
             self.lb3.setText('love u!')
+            game_widget = gameWidget()
         else:
             self.lb1.setText('Welcome')
             self.lb2.setText('Wanna go on your adventure?')
             self.lb3.setText('Please give me your password:')
 
+class gameWidget(QWidget):
+    def __init__(self, parent=None):
+        super(gameWidget, self).__init__(parent)
+        self.initUI()
+
+    def initUI(self):
+        pygame.init()
+        main_clock = pygame.time.Clock()
+        #set up the window
+        window_width = 800
+        window_height = 600
+        window_surface = pygame.display.set_mode((window_width, window_height), 0 , 32)
+        pygame.display.set_caption("Sounds and images")
+
+        food_counter = 0
+        NEWFOOD = 40
+        FOODSIZE = 26
+
+        #set up the colors
+        BLACK = (0, 0, 0)
+        #set up the block data structures
+        player = pygame.Rect(300, 100, 31, 54)
+        player_image = pygame.image.load('boy.png')
+        player_stretched_image_flip = pygame.transform.scale(player_image, (31, 54))
+        player_stretched_image = pygame.transform.scale(player_image, (31, 54))
+        food_image = pygame.image.load('heart2.png')
+        food_stretched_image = pygame.transform.scale(food_image,(26, 24))
+        foods = []
+        for i in range(20):
+            foods.append(pygame.Rect(random.randint(0, window_width - FOODSIZE), random.randint(0, window_height - FOODSIZE), FOODSIZE, FOODSIZE))
+
+        pos_images = []
+        pos_image = []
+        pos_stretched_image = []
+        # pos_image[0] = pygame.image.load("1.png")
+        # pos_image[1] = pygame.image.load("2.png")
+        # pos_image[2] = pygame.image.load("3.png")
+        # pos_image[3] = pygame.image.load("4.png")
+        # pos_image[4] = pygame.image.load("5.png")
+        for j in range(5):
+            pos_image.append(pygame.image.load(str(j+1)+'.png'))
+            pos_stretched_image.append(pygame.transform.scale(pos_image[j],(25,30)))
+            pos_images.append(pygame.Rect(random.randint(0, window_width - FOODSIZE), random.randint(0, window_height - FOODSIZE), FOODSIZE, FOODSIZE))
+
+
+        #set up keyboard variables
+        move_left = False
+        move_right = False
+        move_up = False
+        move_down = False
+        MOVESPEED = 6
+
+        #set up flip flag
+        flip_flag = False
+
+        #set up music
+        pick_up_sound = pygame.mixer.Sound('pickup.wav')
+        pygame.mixer.music.load('belief.mp3')
+        pygame.mixer.music.play(-1, 0.0)
+        music_playing = True
+
+        #run the game loop
+        while True:
+            #check for the QUIT event
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    pygame.quit()
+                    #sys.exit()
+
+
+                if event.type == KEYDOWN:
+                    #change the keyboard variables
+                    if event.key == K_LEFT or event.key == ord('a'):
+                        move_right = False
+                        move_left = True
+                        flip_flag = True
+                        player_stretched_image = pygame.transform.flip(player_stretched_image_flip, flip_flag, 0)
+                    if event.key == K_RIGHT or event.key == ord('d'):
+                        move_right = True
+                        move_left = False
+                        flip_flag = False
+                        player_stretched_image = pygame.transform.flip(player_stretched_image_flip, flip_flag, 0)
+                    if event.key == K_UP or event.key == ord('w'):
+                        move_down = False
+                        move_up = True
+                    if event.key == K_DOWN or event.key == ord('s'):
+                        move_down = True
+                        move_up = False
+                if event.type == KEYUP:
+                    #change the keyboard variables
+                    if event.key == K_ESCAPE:
+                        pygame.quit()
+                        sys.exit()
+                    if event.key == K_LEFT or event.key == ord('a'):
+                        move_left = False
+                        #flip_flag = True
+                    if event.key == K_RIGHT or event.key == ord('d'):
+                        move_right = False
+                        #flip_flag = False
+                    if event.key == K_UP or event.key == ord('w'):
+                        move_up = False
+                    if event.key == K_DOWN or event.key == ord('s'):
+                        move_down = False
+                    if event.key == ord('x'):
+                        player.top = random.randint(0, window_height - player.height)
+                        player.left = random.randint(0, window_width - player.width)
+                    if event.key == ord('m'):
+                        if music_playing:
+                            pygame.mixer.music.stop()
+                        else:
+                            pygame.mixer.music.play(-1, 0, 0)
+                        music_playing = not music_playing
+
+                if event.type == MOUSEBUTTONUP:
+                    foods.append(pygame.Rect(event.pos[0] - 13 , event.pos[1] - 12, FOODSIZE, FOODSIZE))
+
+            food_counter += 1
+            if food_counter >= NEWFOOD:
+                #add new food
+                food_counter = 0
+                foods.append(pygame.Rect(random.randint(0, window_width - FOODSIZE),random.randint(0, window_height - FOODSIZE),FOODSIZE, FOODSIZE))
+            #draw the black background onto the surface
+            window_surface.fill(BLACK)
+
+            #move the player
+            if move_down and player.bottom < window_height:
+                player.top += MOVESPEED
+            if move_up and player.top > 0:
+                player.top -= MOVESPEED
+            if move_left and player.left > 0:
+                player.left -= MOVESPEED
+            if move_right and player.right < window_width:
+                player.right += MOVESPEED
+
+            #draw the block onto the surface
+            window_surface.blit(player_stretched_image, player)
+
+            #check if the block has intersected with any food squares
+            for food in foods[:]:
+                if player.colliderect(food):
+                    foods.remove(food)
+                    player = pygame.Rect(player.left, player.top, player.width + 1, player.height + 2)
+                    #player_stretched_image = pygame.transform.scale(player_image, (player.width, player.height))
+                    player_stretched_image_flip = pygame.transform.scale(player_image, (player.width, player.height))
+                    player_stretched_image = pygame.transform.flip(player_stretched_image_flip, flip_flag, 0)
+                    if music_playing:
+                        pick_up_sound.play()
+
+            #draw the food
+            for food in foods:
+                window_surface.blit(food_stretched_image, food)
+                #window_surface.blit(food_image, food)
+
+            notes = []
+            for k in range(5):
+                    window_surface.blit(pos_stretched_image[k], pos_images[k])
+                    if player.colliderect(pos_images[j]):
+                        notes.append(pygame.image.load('Day'+str(4) +'.JPG'))
+                        #journal_window.deiconify()
+                        #journal_window.blit(pos_image[k])
+            #draw the window onto the screen
+            pygame.display.update()
+            main_clock.tick(40)
 
 if __name__ == '__main__':
     import sys
