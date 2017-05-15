@@ -134,18 +134,18 @@ class WidgetGift(QDialog):
         self.bottomGroupBox.setCheckable(True)
         self.bottomGroupBox.setChecked(True)
 
-        lb1 = QLabel('Welcome',self)
-        lb1.move(450, 30)
-        lb1.setFont(QFont('Comic Sans MS',20))
-        lb2 = QLabel('Wanna go on your adventure?',self)
-        lb2.move(450, 70)
-        lb2.setFont(QFont('Comic Sans MS',20))
-        lb3 = QLabel('Please give me your password:',self)
-        lb3.move(450, 110)
-        lb3.setFont(QFont('Comic Sans MS',15))
+        self.lb1 = QLabel('Welcome',self)
+        self.lb1.move(450, 30)
+        self.lb1.setFont(QFont('Comic Sans MS',20))
+        self.lb2 = QLabel('Wanna go on your adventure?',self)
+        self.lb2.move(450, 70)
+        self.lb2.setFont(QFont('Comic Sans MS',20))
+        self.lb3 = QLabel('Please give me your password:',self)
+        self.lb3.move(450, 110)
+        self.lb3.setFont(QFont('Comic Sans MS',15))
 
-        lineEditPassword = QLineEdit('')
-        lineEditPassword.setEchoMode(QLineEdit.Password)
+        self.lineEditPassword = QLineEdit('')
+        self.lineEditPassword.setEchoMode(QLineEdit.Password)
 
         okBtn = QPushButton('OK', self)
         #okBtn.setToolTip('Click me to <b>enter</b> the game!')
@@ -159,10 +159,10 @@ class WidgetGift(QDialog):
         quitBtn.resize(quitBtn.sizeHint())
 
         layout = QGridLayout()
-        layout.addWidget(lb1, 0, 0, 1, 3)
-        layout.addWidget(lb2, 1, 0, 1, 3)
-        layout.addWidget(lb3, 2, 0, 1, 3)
-        layout.addWidget(lineEditPassword, 3, 0, 1, 3)
+        layout.addWidget(self.lb1, 0, 0, 1, 3)
+        layout.addWidget(self.lb2, 1, 0, 1, 3)
+        layout.addWidget(self.lb3, 2, 0, 1, 3)
+        layout.addWidget(self.lineEditPassword, 3, 0, 1, 3)
         layout.addWidget(okBtn, 4, 0, 2, 1)
         layout.addWidget(quitBtn, 4, 2, 2, 1)
         layout.setRowStretch(5, 1)
@@ -170,7 +170,7 @@ class WidgetGift(QDialog):
 
     def check_password(self):
         password = "526"
-        enteredPassword = lineEditPassword.text()
+        enteredPassword = self.lineEditPassword.text()
         #entered_password, ok = QInputDialog.getText(self, 'Give me your password', 'Password:')
         if enteredPassword == password:
             self.lb1.setText('Wonderful!')
