@@ -23,7 +23,7 @@ class Wiggly_Widget(QWidget):
         self.setAutoFillBackground(True)
 
         newFont = self.font()
-        newFont.setPointSize(newFont.pointSize() +50)
+        newFont.setPointSize(newFont.pointSize() +30)
         self.setFont(newFont)
 
         self.timer = QBasicTimer()
@@ -70,6 +70,8 @@ class ImageViewer(QMainWindow):
         self.scrollArea = QScrollArea()
         self.scrollArea.setBackgroundRole(QPalette.Dark)
         self.scrollArea.setWidget(self.imageLabel)
+        self.scrollArea.setFixedWidth(775)
+        # print(self.scrollArea.height())
         self.setCentralWidget(self.scrollArea)
 
         self.createActions()
@@ -85,7 +87,7 @@ class ImageViewer(QMainWindow):
         if journalnum in [1,4]:
             fileName = ('Day'+str(journalnum) +'.jpg')#journalnum
         else:
-            fileName = ('hb3.jpg')
+            fileName = ('orig_surface.png')
         if fileName:
             image = QImage(fileName)
             if image.isNull():
@@ -223,8 +225,13 @@ class WidgetGift(QDialog):
         self.originalPalette = QApplication.palette()
         QApplication.setPalette(QApplication.style().standardPalette()) #配色方案
 
-        styleLabel = QLabel("526:")
-        #styleLabel.setBuddy(styleComboBox)
+        helloLabel1 = QLabel("happy ")
+        helloLabel2 = QLabel("Here is a APP for you, you'll get something unexpected.")
+        helloLabel3 = QLabel("Anyway, the only purpose is to bring you happiness. ")
+        helloLabel1.setFont(QFont('Adobe Garamond Pro Bold',12))
+        helloLabel2.setFont(QFont('Adobe Garamond Pro Bold',12))
+        helloLabel3.setFont(QFont('Adobe Garamond Pro Bold',12))
+        #helloLabel.setBuddy(styleComboBox)
 
         self.createBottomGroupBox()
         self.createMiddleGroupBox()
@@ -233,38 +240,20 @@ class WidgetGift(QDialog):
         # self.createProgressBar()
 
         #最上方top主题选择模块
-        topLayout = QHBoxLayout()
-        topLayout.addWidget(styleLabel)
+        topLayout = QGridLayout()
+        topLayout.addWidget(helloLabel1,0,0)
+        topLayout.addWidget(helloLabel2,1,0)
+        topLayout.addWidget(helloLabel3,2,0)
         #topLayout.addWidget(styleComboBox)
-        topLayout.addStretch(1)
-        # topLayout.addWidget(self.useStylePaletteCheckBox)
-        # topLayout.addWidget(disableWidgetsCheckBox)
+        topLayout.setRowStretch(1,1)
 
-        # 中间模块middle
-        # wiggly_widget = Wiggly_Widget()
-        # lineEdit = QLineEdit()
-        #
-        # middleLayout = QVBoxLayout()
-        # middleLayout.addWidget(wiggly_widget)
-        # middleLayout.addWidget(lineEdit)
-        # #self.setLayout(middleLayout)
-        #
-        #
-        # lineEdit.textChanged.connect(wiggly_widget.setText)
-        # lineEdit.setText("Happy")
-        # #self.setWindowTitle("Happy (wiggly)")
-        # self.resize(900,520)
 
         # 主
         mainLayout = QGridLayout()
         mainLayout.addLayout(topLayout, 0, 0, 1, 1 )
-        mainLayout.addWidget(self.middleGroupBox, 1, 0, 1, 1)
-        #mainLayout.addWidget(self.topRightGroupBox, 1, 1)
-        mainLayout.addWidget(self.bottomGroupBox, 2, 0, 1, 1)
-        #mainLayout.addWidget(self.bottomGroupBox, 2, 1)
-        #mainLayout.addWidget(self.progressBar, 3, 0, 1, 2)
-        # mainLayout.addWidget(self.game,3,0,5,1)
-        mainLayout.addWidget(self.rightWidget, 0,1,8,1)
+        mainLayout.addWidget(self.middleGroupBox, 1, 0, 2, 1)
+        mainLayout.addWidget(self.bottomGroupBox, 3, 0, 1, 1)
+        mainLayout.addWidget(self.rightWidget, 0,1,8,3)
         mainLayout.setRowStretch(1, 1)
         mainLayout.setRowStretch(2, 1)
         mainLayout.setColumnStretch(0, 1)
@@ -272,7 +261,8 @@ class WidgetGift(QDialog):
         mainLayout.sizeHint()
         self.setLayout(mainLayout)
 
-        self.setWindowTitle("Happy")
+        self.setWindowTitle("happy ! ")
+        self.setWindowIcon(QIcon("heart2.png"))
         #self.resize(1000,800)
         #self.changeStyle("Windows")
         QApplication.setStyle(QStyleFactory.create("Fusion"))
@@ -280,7 +270,8 @@ class WidgetGift(QDialog):
 
 
     def createMiddleGroupBox(self):
-        self.middleGroupBox = QGroupBox("happy")
+        self.middleGroupBox = QGroupBox("Welcome...@^_^@")
+        self.middleGroupBox.setFont(QFont("Cooper Std Black",12))
         self.middleGroupBox.setCheckable(True)
         self.middleGroupBox.setChecked(True)
         self.middleGroupBox.setFixedSize(800,200)
@@ -294,24 +285,25 @@ class WidgetGift(QDialog):
 
 
         lineEdit.textChanged.connect(wiggly_widget.setText)
-        lineEdit.setText("Happy")
+        lineEdit.setText("happy!")
         # self.setWindowTitle("Happy (wiggly)")
         #self.middleGroupBox.sizePolicy()
 
     def createBottomGroupBox(self):
-        self.bottomGroupBox = QGroupBox("Welcome")
+        self.bottomGroupBox = QGroupBox("Ready? Come with me...")
+        self.bottomGroupBox.setFont(QFont("Cooper Std Black",12))
         self.bottomGroupBox.setCheckable(True)
         self.bottomGroupBox.setChecked(True)
 
-        self.lb1 = QLabel('Welcome',self)
+        self.lb1 = QLabel('Ready for it ?',self)
         self.lb1.move(450, 30)
-        self.lb1.setFont(QFont('Comic Sans MS',20))
-        self.lb2 = QLabel('Wanna go on your adventure?',self)
+        self.lb1.setFont(QFont('Adobe Garamond Pro Bold',20))
+        self.lb2 = QLabel('Wanna play a game ?',self)
         self.lb2.move(450, 70)
-        self.lb2.setFont(QFont('Comic Sans MS',20))
+        self.lb2.setFont(QFont('Adobe Garamond Pro Bold',20))
         self.lb3 = QLabel('Please give me your password:',self)
         self.lb3.move(450, 110)
-        self.lb3.setFont(QFont('Comic Sans MS',15))
+        self.lb3.setFont(QFont('Adobe Garamond Pro',15))
 
         self.lineEditPassword = QLineEdit('')
         self.lineEditPassword.setEchoMode(QLineEdit.Password)
@@ -339,33 +331,11 @@ class WidgetGift(QDialog):
         self.bottomGroupBox.setLayout(layout)
 
     def createRightWidget(self):
+
         self.rightWidget = QWidget()
+        # self.rightWidget.setFixedSize(600,800)
         self.journal_show = ImageViewer()
-        # global journalnum
-        # if journalnum in [1,4]:
-        #     fileName = ('Day'+str(journalnum) +'.jpg')#journalnum
-        # else:
-        #     fileName = ('hb3.jpg')
-
-
         self.journal_show.open()
-
-        # if self.fileName:
-        #     image = QImage(self.fileName)
-        #     if image.isNull():
-        #         QMessageBox.information(journal_show, "Image Viewer",
-        #                 "Cannot load %s." % self.fileName)
-        #         return
-        #
-        #     journal_show.imageLabel.setPixmap(QPixmap.fromImage(image))
-        #     journal_show.scaleFactor = 1.0
-        #
-        #     journal_show.printAct.setEnabled(True)
-        #     journal_show.fitToWindowAct.setEnabled(True)
-        #     journal_show.updateActions()
-        #
-        #     if not journal_show.fitToWindowAct.isChecked():
-        #         journal_show.imageLabel.adjustSize()
 
         layout = QVBoxLayout()
         layout.addWidget(self.journal_show)
@@ -378,8 +348,8 @@ class WidgetGift(QDialog):
         #entered_password, ok = QInputDialog.getText(self, 'Give me your password', 'Password:')
         if enteredPassword == password:
             self.lb1.setText('Wonderful!')
-            self.lb2.setText('Happy ')
-            self.lb3.setText('love u!')
+            self.lb2.setText('happy!')
+            self.lb3.setText('hahahahaha u!')
             self.game()
         else:
             self.lb1.setText('Welcome')
@@ -565,7 +535,7 @@ class WidgetGift(QDialog):
     #     if journalnum in [1,4]:
     #         self.fileName = ('Day'+str(journalnum) +'.jpg')#journalnum
     #     else:
-    #         self.fileName = ('hb3.jpg')
+    #         self.fileName = ('orig_surface.png')
 # class gameWidget(QWidget):
 #     def __init__(self, parent=None):
 #         super(gameWidget, self).__init__(parent)
