@@ -331,7 +331,7 @@ class WidgetGift(QDialog):
     def createRightWidget(self):
         self.rightWidget = QWidget()
         journal_show = ImageViewer()
-        filename = ('Day'+str(4) +'.JPG')#journalnum
+        fileName = ('Day'+str(4) +'.JPG')#journalnum
 
         # fileName, _ = QFileDialog.getOpenFileName(journal_show, "Open File",
         #         QDir.currentPath())
