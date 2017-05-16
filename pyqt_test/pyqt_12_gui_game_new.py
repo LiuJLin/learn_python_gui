@@ -9,6 +9,8 @@ from PyQt5.QtGui import QFont, QIcon, QColor, QFontMetrics, QPainter, QPalette,Q
 from PyQt5.QtPrintSupport import QPrintDialog, QPrinter
 import pygame, sys, time, random
 from pygame.locals import *
+journalnum = 0
+
 
 class Wiggly_Widget(QWidget):
     def __init__(self, parent=None):
@@ -77,8 +79,13 @@ class ImageViewer(QMainWindow):
         self.resize(500, 400)
 
     def open(self):
-        fileName, _ = QFileDialog.getOpenFileName(self, "Open File",
-                QDir.currentPath())
+        # fileName, _ = QFileDialog.getOpenFileName(self, "Open File",
+                # QDir.currentPath())
+        global journalnum
+        if journalnum in [1,4]:
+            fileName = ('Day'+str(journalnum) +'.jpg')#journalnum
+        else:
+            fileName = ('hb3.jpg')
         if fileName:
             image = QImage(fileName)
             if image.isNull():
@@ -222,6 +229,7 @@ class WidgetGift(QDialog):
         self.createBottomGroupBox()
         self.createMiddleGroupBox()
         self.createRightWidget()
+        # self.game()
         # self.createProgressBar()
 
         #最上方top主题选择模块
@@ -255,7 +263,8 @@ class WidgetGift(QDialog):
         mainLayout.addWidget(self.bottomGroupBox, 2, 0, 1, 1)
         #mainLayout.addWidget(self.bottomGroupBox, 2, 1)
         #mainLayout.addWidget(self.progressBar, 3, 0, 1, 2)
-        mainLayout.addWidget(self.rightWidget, 1,0,3,1)
+        # mainLayout.addWidget(self.game,3,0,5,1)
+        mainLayout.addWidget(self.rightWidget, 0,1,8,1)
         mainLayout.setRowStretch(1, 1)
         mainLayout.setRowStretch(2, 1)
         mainLayout.setColumnStretch(0, 1)
@@ -314,6 +323,7 @@ class WidgetGift(QDialog):
         #okBtn.move(50,50)
         #clicked 点击触发事件
         quitBtn = QPushButton('Quit', self)
+        # quitBtn.clicked.connect(sys.exit())
         quitBtn.clicked.connect(QCoreApplication.instance().quit)
         #quitBtn.setToolTip('Click me to <b>Quit</b>')
         quitBtn.resize(quitBtn.sizeHint())
@@ -330,30 +340,35 @@ class WidgetGift(QDialog):
 
     def createRightWidget(self):
         self.rightWidget = QWidget()
-        journal_show = ImageViewer()
-        fileName = ('Day'+str(4) +'.JPG')#journalnum
+        self.journal_show = ImageViewer()
+        # global journalnum
+        # if journalnum in [1,4]:
+        #     fileName = ('Day'+str(journalnum) +'.jpg')#journalnum
+        # else:
+        #     fileName = ('hb3.jpg')
 
-        # fileName, _ = QFileDialog.getOpenFileName(journal_show, "Open File",
-        #         QDir.currentPath())
-        if fileName:
-            image = QImage(fileName)
-            if image.isNull():
-                QMessageBox.information(journal_show, "Image Viewer",
-                        "Cannot load %s." % fileName)
-                return
 
-            journal_show.imageLabel.setPixmap(QPixmap.fromImage(image))
-            journal_show.scaleFactor = 1.0
+        self.journal_show.open()
 
-            journal_show.printAct.setEnabled(True)
-            journal_show.fitToWindowAct.setEnabled(True)
-            journal_show.updateActions()
-
-            if not journal_show.fitToWindowAct.isChecked():
-                journal_show.imageLabel.adjustSize()
+        # if self.fileName:
+        #     image = QImage(self.fileName)
+        #     if image.isNull():
+        #         QMessageBox.information(journal_show, "Image Viewer",
+        #                 "Cannot load %s." % self.fileName)
+        #         return
+        #
+        #     journal_show.imageLabel.setPixmap(QPixmap.fromImage(image))
+        #     journal_show.scaleFactor = 1.0
+        #
+        #     journal_show.printAct.setEnabled(True)
+        #     journal_show.fitToWindowAct.setEnabled(True)
+        #     journal_show.updateActions()
+        #
+        #     if not journal_show.fitToWindowAct.isChecked():
+        #         journal_show.imageLabel.adjustSize()
 
         layout = QVBoxLayout()
-        layout.addWidget(journal_show)
+        layout.addWidget(self.journal_show)
         #layout.addWidget(lineEdit)
         self.rightWidget.setLayout(layout)
 
@@ -372,6 +387,11 @@ class WidgetGift(QDialog):
             self.lb3.setText('Please give me your password:')
 
     def game(self):
+        # self.rightWidget = QWidget()
+        # journal_show = ImageViewer()
+        global journalnum
+
+        #self.game = QWidget()
         pygame.init()
         main_clock = pygame.time.Clock()
         #set up the window
@@ -433,7 +453,7 @@ class WidgetGift(QDialog):
             for event in pygame.event.get():
                 if event.type == QUIT:
                     pygame.quit()
-                    #sys.exit()
+                    sys.exit()
 
 
                 if event.type == KEYDOWN:
@@ -521,16 +541,31 @@ class WidgetGift(QDialog):
 
             # notes = []
 
+            global journalnum
             for k in range(5):
                     window_surface.blit(pos_stretched_image[k], pos_images[k])
                     if player.colliderect(pos_images[k]):
-                        self.journalnum = k
+                        journalnum = k
+                        self.journal_show.open()
+                        # self.createRightWidget()
                         #notes.append(pygame.image.load('Day'+str(4) +'.JPG'))
                         #journal_window.deiconify()
                         #journal_window.blit(pos_image[k])
             #draw the window onto the screen
+
             pygame.display.update()
             main_clock.tick(40)
+
+        # layout = QVBoxLayout()
+        # layout.addWidget(window_surface)
+        # #layout.addWidget(lineEdit)
+        # self.game.setLayout(layout)
+    # def changeJournalNum(self):
+    #     global journalnum
+    #     if journalnum in [1,4]:
+    #         self.fileName = ('Day'+str(journalnum) +'.jpg')#journalnum
+    #     else:
+    #         self.fileName = ('hb3.jpg')
 # class gameWidget(QWidget):
 #     def __init__(self, parent=None):
 #         super(gameWidget, self).__init__(parent)
